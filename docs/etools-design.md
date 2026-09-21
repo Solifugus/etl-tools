@@ -204,7 +204,7 @@ Corollary from the same doc: **a recipe that works against SQLite is not
 thereby portable.** DB adapters get tested against real engines or are marked
 unverified.
 
-## 10. Name and distribution — **OPEN**
+## 10. Name and distribution — **DECIDED 2026-09-21**
 
 Measured 2026-09-21:
 
@@ -219,9 +219,20 @@ Measured 2026-09-21:
 
 `github.com/Solifugus/etools` is free.
 
-Proposal: repo and import name `etools`; distribution name `etools-etl` if and
-when published. A PEP 541 transfer request for the abandoned `etools` is
-cheap to file and unlikely to succeed quickly.
+Three independent names, and only the first is the one you see day to day:
+
+| Role | Name | Why |
+|---|---|---|
+| Repo / folder | **`etl-tools`** | Unmistakable in a listing of 156 directories. Free at `github.com/Solifugus/etl-tools` — the PyPI collision does not reach it. |
+| Import | **`etools`** | Short to type; keeps the "oo" joke. |
+| Distribution | **`etools-etl`** | Set in `pyproject.toml`. Only matters if published. |
+
+Repo name ≠ import name is ordinary, not a compromise: `scikit-learn`/`sklearn`,
+`beautifulsoup4`/`bs4`, `python-dateutil`/`dateutil`, `pillow`/`PIL`.
+Descriptive outside, short inside.
+
+A PEP 541 transfer request for the abandoned `etools` on PyPI is cheap to file
+and unlikely to succeed quickly. Not worth waiting on.
 
 ## 11. Open decisions
 
