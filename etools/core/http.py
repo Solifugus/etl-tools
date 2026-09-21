@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Matthew C. Tedder
 """HTTP with an explicit User-Agent policy, retry, and an on-disk cache.
 
 The User-Agent is a *policy*, not a detail. Hosts disagree about it in ways

@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -9,7 +9,22 @@ description = "ETL tools with first-class provenance, and financial data retriev
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{name = "Matthew C. Tedder"}]
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+keywords = ["etl", "lineage", "provenance", "treasury", "fred", "finance"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Topic :: Database",
+    "Topic :: Office/Business :: Financial",
+]
 dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/Solifugus/etl-tools"
+Source = "https://github.com/Solifugus/etl-tools"
 
 [project.optional-dependencies]
 postgres = ["psycopg>=3.1"]

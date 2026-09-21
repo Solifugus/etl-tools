@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Matthew C. Tedder
 """Daily Treasury par yield curve, straight from Treasury. No API key.
 
 Treasury publishes a year of the curve as an Atom/XML feed. FRED republishes

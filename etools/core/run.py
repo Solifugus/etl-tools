@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Matthew C. Tedder
 """The ambient run context.
 
 Lineage recording must not be the caller's job -- if it needs bookkeeping at

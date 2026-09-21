@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Matthew C. Tedder
 """Slice 1's worked example: 5- and 10-year Treasury yields, loaded daily.
 
 Treasury is primary because it publishes first -- FRED republishes the same

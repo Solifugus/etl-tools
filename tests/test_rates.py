@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Matthew C. Tedder
 """Offline tests: no test performs network access.
 
 The network behaviours these modules exist to handle -- FRED's and Treasury's

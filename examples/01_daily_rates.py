@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Matthew C. Tedder
 """Fetch 5- and 10-year Treasury yields and load them, showing what changed."""
 
 from etools import run

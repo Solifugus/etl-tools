@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Matthew C. Tedder
 """The daily rates table: an upsert, not an append.
 
 These series are **revised**. Treasury and FRED both restate published values,

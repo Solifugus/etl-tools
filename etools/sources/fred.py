@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Matthew C. Tedder
 """FRED series via the keyless CSV download endpoint.
 
 No API key: ``fredgraph.csv`` is public. The official API at

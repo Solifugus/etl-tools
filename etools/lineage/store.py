@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Matthew C. Tedder
 """The side-car lineage graph: always on, sqlite-backed, OpenLineage-shaped.
 
 Four node kinds -- Run, Dataset, Field, Edge -- stored in stdlib ``sqlite3``

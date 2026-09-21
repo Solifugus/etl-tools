@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Matthew C. Tedder
 """``python -m etools <verb>`` -- thin wrappers, no logic of their own."""
 
 from __future__ import annotations
