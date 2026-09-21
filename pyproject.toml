@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "etools-etl"
+version = "0.1.0"
+description = "ETL tools with first-class provenance, and financial data retrieval"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{name = "Matthew C. Tedder"}]
+dependencies = []
+
+[project.optional-dependencies]
+postgres = ["psycopg>=3.1"]
+odbc = ["pyodbc>=5"]
+xlsx = ["openpyxl>=3.1"]
+frames = ["polars>=1.0"]
+
+[project.scripts]
+etools = "etools.cli.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["etools*"]
