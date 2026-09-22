@@ -236,6 +236,11 @@ and unlikely to succeed quickly. Not worth waiting on.
 
 ## 11. Open decisions
 
+> Decisions 1-3 are answered in `docs/porting-plan.md` §7, which also carries
+> the roadmap for porting gBASIC's libraries into this tree. They are left
+> stated here because that plan is still a proposal.
+
+
 1. **One distribution or several?** `etools` vs `etools-core` + `etools-fin`.
 2. **Does the `db/` layer target T-SQL first** (as §12 does) **or Postgres**
    (as Nexordia does)?
