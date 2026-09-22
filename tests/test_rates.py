@@ -12,15 +12,19 @@ from __future__ import annotations
 
 import sqlite3
 import unittest
+from unittest import mock
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+from etools.core.http import FetchError
 from etools.core.run import run
 from etools.db import rates
+from etools.pipelines import daily_rates
 from etools.lineage.store import LineageStore
 from etools.sources._obs import Observation
+import etools.cli.__main__ as cli
 from etools.sources.treasury import FIELDS, UnknownSeries, yields
 
 NS = "test://source"
@@ -106,6 +110,25 @@ class TreasuryTests(unittest.TestCase):
     def test_the_two_series_we_care_about_are_mapped(self):
         self.assertEqual(FIELDS["DGS5"], "BC_5YEAR")
         self.assertEqual(FIELDS["DGS10"], "BC_10YEAR")
+
+
+class UnattendedFailureTests(unittest.TestCase):
+    """What the timer depends on: a bad day must exit non-zero.
+
+    An empty result upserts cleanly and reports success, so "no data" is the
+    exact shape a silent failure takes when nobody is watching the output.
+    """
+
+    def test_both_sources_empty_raises_rather_than_loading_nothing(self):
+        with mock.patch.object(daily_rates.treasury, "yields", return_value=[]), \
+             mock.patch.object(daily_rates.fred, "series", return_value=[]):
+            with self.assertRaises(FetchError) as cm:
+                daily_rates.fetch(("DGS5",))
+        self.assertIn("DGS5", str(cm.exception))
+
+    def test_cli_reports_a_failed_fetch_as_exit_1(self):
+        with mock.patch.object(cli, "cmd_rates", side_effect=FetchError("treasury down")):
+            self.assertEqual(cli.main(["rates", "--sqlite", ":memory:"]), 1)
 
 
 if __name__ == "__main__":

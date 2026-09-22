@@ -80,7 +80,13 @@ def connect_postgres(dsn: str) -> DB:
         raise ImportError(
             "Postgres support needs psycopg: pip install etools-etl[postgres]"
         ) from e
-    conn = psycopg.connect(dsn)
+    try:
+        conn = psycopg.connect(dsn)
+    except psycopg.Error as e:
+        # ConnectionError is an OSError, which the CLI already reports as one
+        # clean line and a non-zero exit. Re-raising it here keeps psycopg out
+        # of the CLI entirely and out of the journal's traceback.
+        raise ConnectionError(f"cannot connect to {dsn}: {e}") from e
     info = conn.info
     return DB(conn, "postgres", f"postgres://{info.host}:{info.port}/{info.dbname}")
 

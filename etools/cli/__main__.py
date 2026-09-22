@@ -7,6 +7,7 @@ from __future__ import annotations
 import argparse
 import sys
 
+from ..core.http import FetchError
 from ..db import rates
 from ..lineage.store import DEFAULT_DB, LineageStore
 from ..pipelines import daily_rates
@@ -66,7 +67,14 @@ def main(argv=None) -> int:
     l.set_defaults(fn=cmd_lineage)
 
     args = p.parse_args(argv)
-    return args.fn(args)
+    try:
+        return args.fn(args)
+    except (FetchError, OSError) as e:
+        # Expected failures -- unreachable source, unreachable database. Under
+        # a timer these are what systemd needs to see as a non-zero exit, and
+        # a traceback would only bury the one line that matters in the journal.
+        print(f"etools: {e}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":

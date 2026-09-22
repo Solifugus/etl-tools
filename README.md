@@ -52,6 +52,27 @@ These series get revised. The table is keyed by `(series, obs_date)` and the
 load reports `inserted` / `revised` / `unchanged` separately, so a restatement
 is visible rather than silently overwritten.
 
+## Running it daily
+
+```bash
+./deploy/systemd/install.sh postgresql:///etools_rates .venv/bin/etools
+```
+
+Installs a **user** timer -- no root, no system units -- that fires weekdays at
+18:30 local, after Treasury posts the day's curve. `Persistent=true` means a
+day missed to a powered-off machine runs at the next boot rather than being
+skipped. Check on it with:
+
+```bash
+systemctl --user list-timers etools-rates.timer
+journalctl --user -u etools-rates.service -n 50
+```
+
+A load that cannot reach either source, or cannot reach the database, exits
+non-zero and lands in the journal as one line. Note that an *empty* result is
+treated as a failure too: an empty upsert succeeds and reports zero rows, which
+is exactly what a silent breakage looks like when nobody is reading the output.
+
 ## Tests
 
 ```bash

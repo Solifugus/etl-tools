@@ -32,6 +32,12 @@ def fetch(series=SERIES, *, year: int | None = None, cache_ttl: float | None = 3
     obs = []
     for s in series:
         obs.extend(fred.series(s, since=since, cache_ttl=cache_ttl))
+    if not obs:
+        # Both sources answered with nothing. Unattended, this is the shape a
+        # silent failure takes -- an empty load upserts cleanly and reports
+        # success -- so it has to be an error, not a zero-row day.
+        raise FetchError(
+            f"no observations for {', '.join(series)} from treasury or fred")
     return obs, "fred"
 
 

@@ -1,0 +1,22 @@
+[Unit]
+Description=ETools daily Treasury yield load (DGS5, DGS10)
+Documentation=https://github.com/Solifugus/etl-tools
+# The load is useless without a route to treasury.gov, and a timer that fires
+# during boot would otherwise burn its one attempt before the link is up.
+After=network-online.target
+Wants=network-online.target
+# Three attempts, then stop and stay failed. Without a bound the hourly retry
+# below would keep re-arming until the next day's timer, and a job that never
+# reaches the failed state never shows up as failed.
+StartLimitIntervalSec=6h
+StartLimitBurst=3
+
+[Service]
+Type=oneshot
+WorkingDirectory=@WORKDIR@
+ExecStart=@BIN@ rates --postgres @DSN@ --cross-check
+
+# The sources rate-limit and occasionally 503 for a minute or two. Three tries
+# an hour apart still lands well before the next day's curve is published.
+Restart=on-failure
+RestartSec=1h
