@@ -5,6 +5,11 @@
 **Sources reconciled:** `docs/etools-design.md` §4/§7/§8 and
 `docs/porting-plan.md` §2, plus the code actually on disk.
 
+> **Predates `docs/roadmap.md` (2026-09-23),** which re-verdicts several rows
+> against existing Python libraries. Where they disagree, the roadmap wins:
+> `ari` and the xlsx stack are builds, and `stats`/`xml`/`chart` and friends
+> are adoptions rather than shims written here.
+
 ---
 
 ## Why this document exists

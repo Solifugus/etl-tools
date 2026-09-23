@@ -3,7 +3,13 @@
 **Status:** Proposal (2026-09-22). Nothing below is committed scope.\
 **Path:** `docs/porting-plan.md`\
 **Companion:** `docs/etools-design.md` (the architecture this fills in),
-`docs/tool-map.md` (the consolidated inventory this feeds)\
+`docs/tool-map.md` (the consolidated inventory this feeds)
+
+> **Scope superseded by `docs/roadmap.md` (2026-09-23).** That document asks
+> "is there a strong Python contender for this need?" and reverses three calls
+> made here: `ari` and `xlsx` are substantial builds rather than a skip and a
+> shim, and `discovery`/`dates` adopt sqlglot/workalendar rather than porting.
+> **§1.1's translation law still governs how anything gets ported.**\
 **Source tree surveyed:** `~/development/gbasic` @ `4e8cce8`, 64 stdlib
 libraries, 51,219 lines of `.bas`.
 
