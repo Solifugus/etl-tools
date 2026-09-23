@@ -71,7 +71,8 @@ design doc's layout and needs a ruling.
 | `recognize(path)` — candidates + evidence, never a silent guess (axiom 10) | port:`finio` | 2 |
 | `fixedwidth` | port:`finio` | 2 |
 | `delimited` — CSV/TSV with dialect sniffing **and retained source** | **NEW** | 2 |
-| `xlsx` | shim:`openpyxl` | rolling |
+| `grid.find` — regions in an irregular grid | **NEW** → `arispec.grid` | wave 2 |
+| `.xlsx` reading and writing | **openpyxl, adopted outright** | — |
 | `xml` / `json` | shim:*(stdlib)* | rolling |
 
 ## 4. `adapters/` — meaning

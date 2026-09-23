@@ -72,22 +72,45 @@ parity case in both trees covers the adapter.
 
 ---
 
-## 4. Where the spreadsheet stack lands
+## 4. The grid layer — and what it is not
 
-`xlsx.c` is five layers and they do **not** belong in one library. Splitting
-them along the audience test resolves the "sheets wave" cleanly:
+**openpyxl is not reimplemented, wrapped, or competed with.** It reads and
+writes `.xlsx`, it does that well, and nothing here touches that job. What we
+build starts *after* a worksheet object already exists.
+
+That settles the name too. The thing we build is **not a spreadsheet library**,
+so it must not be named after a file format: the substrate is any 2D typed
+grid — an openpyxl worksheet, a CSV, a database result, a pasted range — and
+`xlsx` would be both narrower than the truth and an implied claim to openpyxl's
+territory. It is **`arispec.grid`**.
+
+```python
+import openpyxl, arispec.grid as grid          # openpyxl does the file
+
+ws     = openpyxl.load_workbook("tape.xlsx")["Q3"]
+sheet  = grid.from_openpyxl(ws)                # a one-line adapter, no parsing
+tables = grid.find(sheet, spec)                # ← the part that does not exist
+```
+
+`grid.from_openpyxl`, `grid.from_csv` and `grid.from_rows` are adapters, not
+readers. They are a few lines each and hold no format knowledge.
+
+The five layers of gBASIC's `xlsx.c` therefore land in four different places:
 
 | Layer | Goes to | Why |
 |---|---|---|
-| L0/L1 — ZIP, XML, read/write | **openpyxl** | Adopt. Not ours to write. |
-| L2 — region extraction from irregular sheets | **`arispec`**, as `arispec.grid` | It *is* ARI, over a cleaner substrate — a sheet is already typed. Same spec language, second backend. `arispec[sheets]` adds openpyxl. |
-| L3 — consolidation, column aliasing, unit normalisation | **`etools.transform`** | This is ETL, not extraction. |
-| L4 — formula → set-op / SQL compiler | **its own dist, later** | The most speculative item in the roadmap. Do not bolt it to anything that has to ship. |
+| L0/L1 — ZIP, XML, read/write, round-trip | **openpyxl** | Not ours. Never was. |
+| L2 — region extraction from irregular grids | **`arispec.grid`** | It *is* ARI, over a cleaner substrate — a grid is already typed. Same spec language, second backend. |
+| L3 — consolidation, column aliasing, unit normalisation | **`etools.transform`** | ETL, not extraction. |
+| L4 — formula → set-op / SQL compiler | **its own dist, later** | The most speculative item in the roadmap; bolted to nothing that has to ship. |
 
-This makes the star bigger rather than diluting it: **one spec language, two
-substrates — text and grid.** That is a better library than either half.
+**One spec language, two substrates — text and grid.** That is a better
+library than either half, and it is why L2 belongs to the star rather than to
+a spreadsheet package of its own.
 
----
+If `arispec.grid` ever earns its own distribution, **`regionspec`** is free and
+accurate. `gridspec` is also free and should be avoided — `matplotlib.gridspec`
+means something else to exactly the people this is for.
 
 ## 5. Repos
 

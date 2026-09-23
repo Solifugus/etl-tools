@@ -52,7 +52,7 @@ each wave commits**. This is an assessment from knowledge, not from PyPI today.
 
 | Need | Adopt | Build on top |
 |---|---|---|
-| **xlsx read/write/round-trip** | **openpyxl** | Round-trip *fidelity* checks; the L2/L3/L4 stack above |
+| **xlsx read/write/round-trip** | **openpyxl** — adopted outright, never reimplemented | Nothing. The grid layer starts after a worksheet object exists. |
 | **Excel formula evaluation** | **`formulas`** or **pycel** | Only the set-based compiler; do not reimplement evaluation |
 | **SQL parsing and column lineage** | **sqlglot** (has a `lineage()`; excellent dialect coverage) | `discovery`'s governing split: **declared** (read from the catalog, certain) vs **inferred** (the result of a search, and therefore carrying its width, null model and threshold). At 10,000 columns there are ~50M candidate pairs and coincidence is a certainty, not a risk. sqlglot gives the parse; it has no opinion about that. |
 | **Business calendars** | **workalendar**, **exchange_calendars** | Holiday data is solved. `dates`'s recurrence spec language (`series`, `matches`, business *hours*) is not. |
@@ -126,13 +126,19 @@ widest gap between its value and its Python competition.
 **Ends with:** a standalone library that turns legacy print reports into
 frames. Independently useful, independently publishable.
 
-### Wave 2 — Sheets
+### Wave 2 — `arispec.grid`
 
-- L0/L1 over **openpyxl**; round-trip fidelity tests.
-- L2 — ARI-for-grids, reusing Wave 1's engine. *This is why ARI comes first.*
-- L3 — consolidation: column aliasing, unit normalisation, merge.
-- Evaluate `formulas`/pycel and adopt one. L4's compiler is deferred to Wave 5;
-  it is the most speculative item in the document.
+**openpyxl is adopted outright and never reimplemented** — it is already the
+tool of choice here, and the grid layer starts after a worksheet object exists.
+See `packaging.md` §4.
+
+- `grid.from_openpyxl` / `from_csv` / `from_rows` — adapters, not readers.
+- Region extraction over an irregular grid, reusing Wave 1's spec engine.
+  *This is why ARI comes first.*
+- L3 consolidation — column aliasing, unit normalisation, merge — lands in
+  `etools.transform`, not here.
+- Evaluate `formulas`/pycel and adopt one. The set-op compiler is deferred to
+  Wave 5; it is the most speculative item in the document.
 
 **Ends with:** messy workbooks → clean frames → database tables.
 
