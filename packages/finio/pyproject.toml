@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "finio"
+version = "0.0.1"
+description = "A financial adapter framework: payment and statement formats, with provenance"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "Matthew C. Tedder", email = "matthewct@gmail.com" }]
+keywords = ["nacha", "ach", "bai2", "ofx", "iso20022", "payments", "fintech", "etl"]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+Homepage = "https://github.com/Solifugus/etl-tools"
+Roadmap = "https://github.com/Solifugus/etl-tools/blob/master/docs/roadmap.md"
+
+[tool.setuptools.packages.find]
+include = ["finio*"]

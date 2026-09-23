@@ -30,7 +30,7 @@ Five pass. Five distributions.
 
 | Distribution | Import | Depends on | Audience |
 |---|---|---|---|
-| **kernel** *(§7)* | `etcore` | — | Everything below |
+| **`tervalue`** *(§9)* | `tervalue` | — | Everything below |
 | **`arispec`** ⭐ | `arispec` | **nothing** | Anyone parsing irregular reports: banking, insurance, healthcare, telecom billing, government |
 | **`finio`** | `finio` | kernel | Payments engineers |
 | **`etools-etl`** | `etools` | kernel; `[ari]` `[finio]` `[postgres]` … | ETL engineers in financial services |
@@ -38,7 +38,7 @@ Five pass. Five distributions.
 | *(later)* formula compiler | — | — | Speculative; Wave 5 |
 
 ```
-                    etcore  (kernel: UNKNOWN, Outcome, LossReport, Money, SourceRef)
+                    tervalue  (UNKNOWN, Outcome, LossReport, Money -- and nothing else)
                    /   |   \
               finio  etools  finprims
                        |
@@ -57,7 +57,7 @@ graph acyclic without anyone having to think about it.
 
 `arispec` depends on **nothing** — not even the kernel. That means it defines
 its own three-valued result and its own source span, duplicating about 150
-lines of `etcore`.
+lines of `tervalue`.
 
 That duplication is bought on purpose. ARI's audience is people inside
 locked-down enterprise environments where every added dependency is a
@@ -67,7 +67,7 @@ kernel ships a documented ~10-line adapter that lifts ARI results into
 `Outcome`, and `etools[ari]` is where that adapter lives.
 
 The risk is real and worth stating: **two three-valued types that can drift.**
-The mitigation is that `etcore`'s is the one that must not change (§6), and a
+The mitigation is that `tervalue`'s is the one that must not change (§6, §9.4), and a
 parity case in both trees covers the adapter.
 
 ---
@@ -123,9 +123,10 @@ It has no dependency on this tree (§3), so it loses nothing by leaving.
 ```
 etl-tools/
   packages/
-    etcore/      pyproject.toml + etcore/
+    tervalue/    pyproject.toml + tervalue/
     finio/       pyproject.toml + finio/
-    etools/      pyproject.toml + etools/      ← today's code, unmoved
+    etools/      pyproject.toml + etools/      <- today's code, unmoved
+    arispec/     pyproject.toml + arispec/     <- leaves at Wave 1 (§10.4)
     finprims/    pyproject.toml + finprims/
 ```
 
@@ -140,9 +141,9 @@ issues and stars pointing at it.
 ## 6. Versioning
 
 Each distribution versions independently. Dependencies are declared with a
-**floor and a major ceiling** (`etcore>=0.3,<1`), never pinned.
+**floor and a major ceiling** (`tervalue>=0.3,<1`), never pinned.
 
-The discipline that makes a shared kernel safe: **`etcore` reaches 1.0 quickly
+The discipline that makes a shared kernel safe: **`tervalue` reaches 1.0 quickly
 and then stops changing.** A kernel that keeps moving forces a version matrix
 on everything above it. If it is still churning at Wave 3, that is evidence the
 split was wrong, not that the kernel needs another release.
@@ -156,7 +157,7 @@ split was wrong, not that the kernel needs another release.
 | ARI | **`arispec`** | ✅ | `anchorspec`, `ari-spec`, `arikit`, `anchored` |
 | Payments | **`finio`** | ✅ | — |
 | ETL spine | **`etools-etl`** | ✅ *(already ours)* | — |
-| Kernel | **`etools-core`** | ✅ | `provkit`, `sourcekit`, `tervalue` |
+| Kernel | **`tervalue`** *(§9.5)* | ✅ | `statedvalue`, `plainvalue`, `knownly`, `etools-core` |
 | Banking math | **`finprims`** | ✅ | `retailbank`, `bankprims`, `ledgerprims` |
 
 Two notes on ARI's name. `ari` itself is **taken** — an Asterisk REST Interface
@@ -186,16 +187,95 @@ with a placeholder. Free names do not stay free, and both are load-bearing.
 
 ---
 
-## 9. Open decisions
+## 9. The kernel — **RECOMMENDED: its own distribution**
 
-1. **Is the kernel a distribution?** §2 says yes. The alternative is folding it
-   into `finio` — where the axioms were actually invented — and having `etools`
-   depend on `finio`. That is defensible and slightly odd: an ETL library
-   depending on a payments library. **Needed before Wave 0 writes a line.**
-2. **Does ARI really carry its own duplicate value types?** §3 says yes, for
+Asked and answered here because Wave 0 writes it first.
+
+### 9.1 The recommendation
+
+A separate distribution, **`tervalue`** (free; three-valued), holding exactly
+four things: `UNKNOWN`, `Outcome`, `LossReport`, `Money`. Depended on by
+`finio`, `etools` and `finprims`. Not by `arispec` (§3).
+
+### 9.2 Why not fold it into an existing library
+
+The alternatives are to host it in `finio` (where the axioms were actually
+invented) or in `etools` (where the first consumer is). Both fail for the same
+reason, and it is not the obvious one:
+
+**A distribution has one version number, and these have opposite cadences.**
+The kernel must become stable and stay stable — everything depends on it.
+`finio` must keep moving *forever*: axiom 4 says adapter revisions are additive
+and kept indefinitely, so every new format and every revision of an old one is
+another release. `etools` will churn hardest of all.
+
+Host the kernel in either, and the volatile half sets the release cadence for
+the stable half. Every new NACHA revision bumps the version that `finprims`
+pins against. That is the coupling, and it does not show up until the third
+consumer exists — by which time it is expensive.
+
+The secondary objection is the ordinary one: an ETL library depending on a
+payments library, or a payments library depending on an ETL library, is a
+dependency nobody can explain to a reviewer.
+
+### 9.3 Why not let each library define its own
+
+Three `Money` types that cannot interoperate. `finio` parses a NACHA amount,
+`etools` loads it, `finprims` amortises it, and each boundary converts. That is
+axiom 8 — loss must be explicit — being violated silently at every crossing,
+in the one library family whose entire pitch is that it does not do that.
+
+`arispec` is the deliberate exception (§3), and it is affordable precisely
+because ARI sits at the *edge*: values enter the family through it and are
+lifted once, at a single documented boundary, rather than crossing back and
+forth.
+
+### 9.4 The three conditions that make it safe
+
+A shared kernel is a liability if it keeps moving. These are what keep it from
+becoming one:
+
+1. **Contents are capped at four types.** `UNKNOWN`, `Outcome`, `LossReport`,
+   `Money`. Nothing else is admitted without a written reason.
+2. **`SourceRef` is *not* in it** — a correction to §2's earlier sketch.
+   Provenance in `finio` is *reconstructed on demand from a retained source*,
+   which makes a source reference an artefact of finio's own source model, not
+   a neutral value. Putting it in the kernel would make the kernel "finio's
+   value layer under a different name" and drag finio's cadence in with it.
+   Provenance references stay with whoever computes them.
+3. **1.0 by the end of Wave 1, then additions only.** If it is still changing
+   shape at Wave 3, that is evidence the split was wrong — not that it needs
+   another release.
+
+### 9.5 Why the name is not `etools-core`
+
+`etools-core` is free and was the obvious pick, and it quietly reasserts the
+coupling the split exists to remove: a payments engineer installing `finio` and
+watching `etools-core` arrive will reasonably wonder what ETL has to do with
+their ACH file. The kernel is not etools'. It is the family's.
+
+`tervalue` is free, neutral, and says what it holds. Alternatives, also free:
+`statedvalue`, `plainvalue`, `knownly`.
+
+### 9.6 The cost, stated plainly
+
+One more `pyproject.toml`, one more release step, one more version pin in three
+places. In a monorepo (§5) that is one directory and one CI job. That is the
+whole cost, and it buys a dependency graph that is correct from the first
+import instead of one that gets corrected under load.
+
+---
+
+## 10. Open decisions
+
+1. **Does ARI really carry its own duplicate value types?** §3 says yes, for
    its audience. Reversing this later is a breaking change for ARI's users.
-3. **Name for the kernel.** `etools-core` is boring and unambiguous; `provkit`
-   says what it holds. Boring is probably right for infrastructure.
-4. **Does `dates` stay inside `etools`?** Business calendars have a wide
-   audience and no dependency on anything here. It is a sixth distribution
-   waiting to happen; leave it inside until it asks to leave.
+2. **The kernel's name.** §9.5 recommends `tervalue` over `etools-core`. This
+   is the weakest part of §9 — the reasoning is about perception, not
+   mechanics, and perception arguments are easy to get wrong.
+3. **Does `dates` stay inside `etools`?** Business calendars have a wide
+   audience and no dependency on anything here. A sixth distribution waiting to
+   happen; leave it inside until it asks to leave.
+4. **When does `arispec` leave this repo?** §5 says its own repo from day one;
+   the 0.0.1 reservation currently sits in `packages/arispec/` because a
+   placeholder is not day one. Extract at Wave 1.
