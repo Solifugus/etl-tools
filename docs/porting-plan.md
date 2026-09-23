@@ -2,7 +2,8 @@
 
 **Status:** Proposal (2026-09-22). Nothing below is committed scope.\
 **Path:** `docs/porting-plan.md`\
-**Companion:** `docs/etools-design.md` (the architecture this fills in)\
+**Companion:** `docs/etools-design.md` (the architecture this fills in),
+`docs/tool-map.md` (the consolidated inventory this feeds)\
 **Source tree surveyed:** `~/development/gbasic` @ `4e8cce8`, 64 stdlib
 libraries, 51,219 lines of `.bas`.
 
@@ -60,7 +61,7 @@ drift are worse than one library.
 Three treatments, plus what is already built. The distinction matters more
 than the phasing does: **most of this tree should not be re-implemented.**
 
-### 2.1 PORT — Python has no good equivalent (≈19,700 lines)
+### 2.1 PORT — Python has no good equivalent (≈19,100 lines)
 
 The real work. These are ported line-for-line in behaviour, with the gBASIC
 fixtures as the test corpus.
@@ -74,7 +75,7 @@ fixtures as the test corpus.
 | finance math | `finance` `accounting` | 1,084 | `etools.finance`, `etools.accounting` |
 | domain | `credit` `scoring` `lending` `estate` `deposits` | 2,157 | `etools.domain.*` |
 | lineage | `discovery` | 2,342 | folds into the existing `etools.lineage` |
-| spreadsheet→DB | `consolidate` `dbframe` | 626 | `etools.transform`, `etools.db.frame` — **AGPL, see §4** |
+| ~~spreadsheet→DB~~ | ~~`consolidate` `dbframe`~~ | ~~626~~ | **Written fresh, not ported** — AGPL, and the logic is obvious. See `tool-map.md` §9.4 |
 | EDGAR suite | `edgar` `fundamentals` `screener` `forensics` `insiders` `ownership` `mdna` | 3,251 | `etools.sources.edgar`, `etools.analysis.*` — **AGPL, see §4** |
 | retrieval | `market` | 471 | `etools.sources.market` |
 
@@ -159,9 +160,14 @@ fact only ever tests what already passes.
 
 Ten gBASIC libraries are **AGPL-3.0-or-later**, not Apache-2.0:
 `consolidate` `dbframe` `edgar` `forensics` `fundamentals` `grid` `insiders`
-`mdna` `ownership` `screener`. That is the spreadsheet→database pipeline and
-the whole EDGAR securities-analysis suite — about 3,880 portable lines, and
-some of the most distinctive work in the tree.
+`mdna` `ownership` `screener`.
+
+Of those, **seven are in scope** — the EDGAR securities-analysis suite, 3,251
+lines, and some of the most distinctive work in the tree. `grid` is skipped
+(§2.3). `consolidate` and `dbframe` are *written fresh rather than ported*:
+they are needed in Phases 3-4, and 626 lines of column-type inference,
+`CREATE TABLE` emission and name/percent coercion are cheaper to write than to
+relicense. That is what keeps the claim below true.
 
 `etools` is Apache-2.0. **These cannot simply be copied across.** The copyright
 holder is the same person, so this is a decision, not an obstacle — but it has
@@ -173,7 +179,8 @@ to be a deliberate one:
 | **B. Second distribution, `etools-edgar`, AGPL** | Keeps the original bargain; `etools` core stays Apache. | Two distributions, two licenses, and the banks `etools` targets cannot use it. |
 | **C. Defer** | Phases 0–7 are entirely Apache-2.0 and unblocked. | The EDGAR work waits. |
 
-**Recommended: C now, A later.** Nothing before Phase 8 touches an AGPL module,
+**Recommended: C now, A later.** With the paragraph above applied, nothing
+before Phase 8 touches an AGPL module,
 so the decision does not need making today — and it is a better decision after
 the framework exists than before. When it comes: the AGPL was chosen to protect
 a *product*; `etools` is a *component*, and a component nobody may import is not
@@ -297,7 +304,7 @@ the one most likely to be reached for.
 
 ## 6. Honest sizing
 
-≈19,700 lines of `.bas` in the PORT column, plus tests and parity cases.
+≈19,100 lines of `.bas` in the PORT column, plus tests and parity cases.
 Phases 2, 3 and 7 are each multi-session on their own. Realistically **15–20
 focused sessions**, not nine.
 

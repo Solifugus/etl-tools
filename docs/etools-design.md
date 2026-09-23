@@ -52,6 +52,13 @@ their place there; they are not re-derived here.
 
 ## 4. Package layout
 
+> The consolidated inventory of what goes in each of these — 61 tools, with
+> origin and phase — is `docs/tool-map.md`. It also records two corrections to
+> this section: `quality/` is entirely unbuilt and undesigned, and ported
+> gBASIC libraries sit at top level beside these subpackages rather than
+> inside them (`tool-map.md` §9.5).
+
+
 ```
 etools/
   core/        values, three-valued results, loss reports, retry, cache, rate limits
