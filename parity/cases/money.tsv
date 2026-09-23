@@ -1,0 +1,37 @@
+# Parity cases: money. Tab-separated, on purpose -- a case file two parsers
+# must agree on cannot depend on a JSON parser that one side has only in part.
+#
+# Columns:  expr <TAB> ccy <TAB> amount <TAB> operand <TAB> expect <TAB> name
+# operand is "-" when the expression takes none.
+# An expect beginning with "!" is an error, and the rest is the message verbatim.
+#
+# A name beginning with "gbasic-defect:" is a case Python passes and gBASIC is
+# known to fail. gBASIC's two money constructors disagree about the message for
+# one refusal -- `{USD}= "1.23456789"` names the currency and the limit,
+# `money.of("USD", ...)` does not -- though reference.md says money.of has "the
+# same parse path and same refusals as the modifier". The expectation here is
+# the modifier's, which is the better message; the fix belongs upstream in
+# gBASIC (porting-plan.md §1.2: fix there first, then port the fixed one).
+#
+expr	ccy	amount	operand	expect	name
+show	USD	19.95	-	19.95	text is exact
+show	USD	3.459	-	3.46	display rounds to the minor unit
+mul	USD	3.459	10	34.59	but the value did not round
+show	USD	0.125	-	0.12	half-even at .125
+show	USD	0.135	-	0.14	half-even at .135
+show	USD	0.145	-	0.14	half-even at .145
+mul	USD	0.125	100	12.50	0.125 is kept exactly
+mul	USD	0.135	100	13.50	0.135 is kept exactly
+mul	USD	0.145	100	14.50	0.145 is kept exactly
+show	JPY	1995	-	1995	JPY has no decimal places
+show	KWD	19.950	-	19.950	KWD has three
+mul	JPY	1.2345	10000	12345	JPY still keeps four guard digits
+mul	KWD	1.2345678	10000000	12345678.000	KWD keeps seven
+text	USD	0.10432	-	0.104320	text() renders at the storage scale
+text2	USD	0.10432	-	0.10	text(2) renders at an explicit width
+text	KWD	1234.5678	-	1234.5678000	storage scale follows the currency
+accum	USD	0.01	1000	10.00	a cent added a thousand times
+div	USD	1.00	3	0.33	a third displays as 0.33
+divmul	USD	1.00	3	1.00	and multiplies back to the whole
+show	USD	1.23456789	-	!USD: money text has more decimal places than the currency can store (USD stores 6)	gbasic-defect: authored excess is refused
+show	JPY	1.23456	-	!JPY: money text has more decimal places than the currency can store (JPY stores 4)	gbasic-defect: JPY refuses five places

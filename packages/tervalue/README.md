@@ -9,12 +9,12 @@ on both sides.
 ```python
 from tervalue import Money, Outcome, UNKNOWN
 
-Money.of("100.00", "USD").allocate([1, 1, 1])
-# (Money.of("33.34", "USD"), Money.of("33.33", "USD"), Money.of("33.33", "USD"))
+Money.of("USD", "100.00").allocate([1, 1, 1])
+# (Money.of("USD", "33.34"), Money.of("USD", "33.33"), Money.of("USD", "33.33"))
 # -- the parts sum back to the whole, which is the only property a ledger cares about
 
-Money.of(12.34, "USD")        # TypeError: refuses float
-Money.of("1", "USD") + Money.of("1", "EUR")   # CurrencyMismatch
+Money.of("USD", 12.34)        # TypeError: refuses float
+Money.of("USD", "1") + Money.of("EUR", "1")   # CurrencyMismatch
 ```
 
 ### The distinctions it exists to keep
@@ -33,13 +33,26 @@ by a better parser without going back to the file.
 indistinguishable from one that had nothing to lose, and those need different
 decisions.
 
-**`Money` is an exact integer of minor units.** Scale comes from the currency
-(JPY 0, USD 2, KWD 3), `float` is refused at construction, arithmetic never
-leaves `int`/`Decimal`, rounding is half-even on the *text*, and two currencies
-never mix — a conversion needs a rate, which is a fact about a date, not a
-property of a value.
+**`Money` keeps four guard digits below the minor unit.** USD stores six
+decimal places, JPY four, KWD seven. Sub-cent amounts are ordinary in finance —
+fuel is posted at $3.459 a gallon — so **display** rounds to the minor unit and
+the **value** does not:
+
+```python
+fuel = Money.of("USD", "3.459")
+str(fuel)        # '3.46 USD'   <- display rounds
+str(fuel * 10)   # '34.59 USD'  <- the value did not
+fuel.text()      # '3.459000'   <- the exit that keeps everything, round-trips
+```
+
+`float` is refused at construction, arithmetic never leaves `int`/`Decimal`,
+rounding is half-even on the *text*, precision you wrote past the guard digits
+is refused while precision a calculation produced is rounded, and two
+currencies never mix — a conversion needs a rate, which is a fact about a date,
+not a property of a value.
 
 Ported from gBASIC's `money` type, closing the four defects its own design
-document records against its first implementation. Each has a test that names it.
+document records against its first implementation. Each has a test that names
+it, and `parity/` runs the same cases against both trees.
 
 Apache-2.0. Copyright 2026 Matthew C. Tedder.

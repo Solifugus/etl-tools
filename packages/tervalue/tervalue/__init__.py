@@ -20,7 +20,8 @@ make this the value layer of whichever library got there first.
 """
 
 from ._loss import Loss, LossReport
-from ._money import DEFAULT_ROUNDING, CurrencyMismatch, Money, exponent
+from ._money import (DEFAULT_ROUNDING, GUARD_DIGITS, CurrencyMismatch, Money,
+                     exponent, stored_places)
 from ._outcome import INVALID, OK, STATUSES, UNKNOWN_STATUS, Outcome
 from ._unknown import UNKNOWN
 
@@ -28,6 +29,7 @@ __all__ = [
     "UNKNOWN",
     "Outcome", "OK", "UNKNOWN_STATUS", "INVALID", "STATUSES",
     "Loss", "LossReport",
-    "Money", "CurrencyMismatch", "exponent", "DEFAULT_ROUNDING",
+    "Money", "CurrencyMismatch", "exponent", "stored_places",
+    "GUARD_DIGITS", "DEFAULT_ROUNDING",
 ]
 __version__ = "0.1.0"
