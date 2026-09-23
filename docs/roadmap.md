@@ -90,10 +90,10 @@ an audience far wider than fintech ETL:
 | **`etools.sheets`** | The xlsx L2-L4 stack over openpyxl | Fintech, CECL tapes, anyone consolidating workbooks |
 | **`finio`** *(inside `etools` at first)* | Adapter framework + payment formats | Payments |
 
-**Recommendation: one repo, separate importable packages, one distribution to
-start.** Split a package out only when it has earned its own audience. `ari` is
-the one most likely to earn it, and keeping it import-clean from day one — no
-`etools` import inside `ari` — costs nothing now and is expensive to retrofit.
+> **Superseded by `docs/packaging.md` (2026-09-23).** The one-distribution
+> recommendation below did not survive the audience test: the family is **five**
+> distributions, ARI is zero-dependency in its own repo, and the xlsx layers
+> split across three of them. Read that document instead of this section.
 
 ---
 
