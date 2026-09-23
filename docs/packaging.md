@@ -1,6 +1,6 @@
 # The library family — how this breaks up
 
-**Status:** Proposal (2026-09-23). One decision in §8 is urgent; the rest can wait.\
+**Status:** §9 decided 2026-09-23; the rest is proposal.\
 **Path:** `docs/packaging.md`\
 **Companion:** `docs/roadmap.md` (what gets built), `docs/tool-map.md` (inventory).
 
@@ -187,9 +187,9 @@ with a placeholder. Free names do not stay free, and both are load-bearing.
 
 ---
 
-## 9. The kernel — **RECOMMENDED: its own distribution**
+## 9. The kernel — **DECIDED 2026-09-23: its own distribution, `tervalue`**
 
-Asked and answered here because Wave 0 writes it first.
+Asked and answered here because Wave 0 writes it first. Ruled 2026-09-23.
 
 ### 9.1 The recommendation
 
@@ -270,9 +270,6 @@ import instead of one that gets corrected under load.
 
 1. **Does ARI really carry its own duplicate value types?** §3 says yes, for
    its audience. Reversing this later is a breaking change for ARI's users.
-2. **The kernel's name.** §9.5 recommends `tervalue` over `etools-core`. This
-   is the weakest part of §9 — the reasoning is about perception, not
-   mechanics, and perception arguments are easy to get wrong.
 3. **Does `dates` stay inside `etools`?** Business calendars have a wide
    audience and no dependency on anything here. A sixth distribution waiting to
    happen; leave it inside until it asks to leave.
