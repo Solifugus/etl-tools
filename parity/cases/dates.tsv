@@ -1,0 +1,135 @@
+# Parity cases: dates. Same six tab-separated columns as money.tsv; what the
+# middle three mean depends on the expression, which is what a flat format
+# costs and what it buys -- both parsers agree on the file without either one
+# needing a JSON decoder.
+#
+#   expr <TAB> a <TAB> b <TAB> c <TAB> expect <TAB> name
+#
+# Calendars and specs are NAMED, and both runners build the named thing
+# identically. That is the point of naming them: a case that disagrees is a
+# disagreement about behaviour, never about which calendar was meant.
+#
+#   calendars  plain xmas feb13 hours xmashours july4 july4f never badobserve
+#   specs      thu3 wedlast wedneg1 tue5 mon1q fri1y blastwk tueafter15
+#              bbefore28 monoa monafter barefri d31mod d31fwd business d15m7
+#              board boardx payroll monthly standup bymonth bdays
+#              badroll badwithin nthneg nonth badwhen noevery badevery
+#   bounds     h1 c6from0102 c4from0131 c6from0817 y2026 c3from1223
+#              c3from0101 nobound
+#
+# An expect beginning with "!" is an error and the rest is its message,
+# verbatim -- error text is part of the public surface (porting-plan.md §1.1),
+# and these are the cases that actually enforce that.
+#
+# The fixed points are hand-checkable: 2026-08-17 is a Monday, so August 2026
+# has Thursdays on 6/13/20/27 and Wednesdays on 5/12/19/26. Christmas 2026 is
+# a Friday and 2026-10-31 a Saturday. Most are lifted from gBASIC's own
+# examples/dates_select_test.bas and dates_hours_test.bas, which already pass
+# there -- so a disagreement here is a port defect, not a fresh guess.
+#
+expr	a	b	c	expect	name
+dayname	2026-08-17	-	-	Monday	the Monday everything anchors on
+dayname	2026-12-25	-	-	Friday	Christmas 2026 is a Friday
+days_between	2026-08-17	2026-08-20	-	3	days_between counts forward
+days_between	2026-08-20	2026-08-17	-	-3	and is signed backward
+between	2026-01-31	2026-02-28	months	1	Jan 31 to Feb 28 is one month
+between	2026-01-31	2026-02-27	months	0	one day short is zero
+between	2026-01-01	2027-01-01	years	1	whole years
+between	2026-02-28	2026-01-31	months	-1	signed
+end_of_month	2026-02-10	-	-	2026-02-28	end of a short month
+start_of_month	2026-02-10	-	-	2026-02-01	start of month
+next_weekday	2026-08-21	friday	-	2026-08-28	next friday from a Friday is a week on
+previous_weekday	2026-08-21	friday	-	2026-08-14	and previous friday is a week back
+at	2026-08-17	14:00	-	2026-08-17 14:00:00	a day plus a time of day
+at	2026-08-17	0:00	-	2026-08-17	midnight does not bump precision
+is_business_day	2026-08-22	plain	-	false	Saturday
+is_business_day	2026-12-25	plain	-	true	a holiday the calendar has not been told about
+is_business_day	2026-12-25	xmas	-	false	and one it has
+next_business_day	2026-08-17	plain	-	2026-08-18	strictly after, even from a working day
+next_business_day	2026-08-21	plain	-	2026-08-24	Friday steps over the weekend
+previous_business_day	2026-08-24	plain	-	2026-08-21	and back over it
+add_business_days	2026-08-17	5	plain	2026-08-24	five working days is a week
+add_business_days	2026-08-24	-5	plain	2026-08-17	negative walks back
+add_business_days	2026-08-22	0	plain	2026-08-22	zero does not move, even off a working day
+business_days_between	2026-08-17	2026-08-21	plain	4	half-open: a < d <= b
+business_days_between	2026-08-21	2026-08-17	plain	-4	signed
+business_days_between	2026-12-24	2026-12-28	xmas	1	the holiday and the weekend do not count
+holiday_count	july4	-	-	2	observe nearest ADDS the observed day
+holiday_count	july4f	-	-	2	observe forward likewise
+is_business_day	2026-07-03	july4	-	false	Jul 4 2026 is a Saturday, observed Friday
+is_business_day	2026-07-03	july4f	-	true	forward does not take the Friday
+is_business_day	2026-07-06	july4f	-	false	it takes the Monday
+select	thu3	2026-08-17	plain	2026-08-20	third Thursday
+select	wedlast	2026-08-17	plain	2026-08-26	last Wednesday
+select	wedneg1	2026-08-17	plain	2026-08-26	nth -1 is the same as last
+select	tue5	2026-08-17	plain	unknown	a fifth Tuesday that does not exist
+select	mon1q	2026-08-17	plain	2026-07-06	first Monday of the quarter
+select	fri1y	2026-08-17	plain	2026-01-02	first Friday of the year
+select	blastwk	2026-08-19	plain	2026-08-21	last business day of the ISO week
+select	tueafter15	2026-08-17	plain	2026-08-18	first Tuesday after the 15th
+select	bbefore28	2026-12-28	xmas	2026-12-24	first business day before a deadline
+select	monoa	2026-08-17	plain	2026-08-17	on_or_after includes the anchor
+select	monafter	2026-08-17	plain	2026-08-24	after excludes it
+select	barefri	2026-08-17	plain	2026-08-21	a bare spec reads as next-X
+select	d31mod	2026-10-15	plain	2026-10-30	roll modified stays in its month
+select	d31fwd	2026-10-15	plain	2026-11-02	roll forward crosses out of it
+matches	thu3	2026-08-20	plain	true	the same vocabulary as a predicate
+matches	thu3	2026-08-13	plain	false	the second Thursday does not match
+matches	business	2026-08-15	plain	false	kind business rejects a Saturday
+matches	d15m7	2026-07-15	plain	true	month as a number
+series_count	board	h1	plain	6	six board meetings Jan-Jun
+series_0	board	h1	plain	2026-01-15 14:00:00	and the first is stamped 14:00
+series_count	boardx	h1	plain	5	except leaves a gap, not a reschedule
+series_count	payroll	c6from0102	feb13	6	six fortnightly paydays
+series_3	payroll	c6from0102	feb13	2026-02-12	the holiday payday rolled backward
+series_4	payroll	c6from0102	feb13	2026-02-27	and the next one did not move
+series_1	monthly	c4from0131	plain	2026-02-28	monthly from Jan 31 clamps
+series_2	monthly	c4from0131	plain	2026-03-31	but does not drift -- steps are start + step*k
+series_count	standup	c6from0817	plain	6	when: without nth emits EVERY candidate
+series_0	standup	c6from0817	plain	2026-08-17	Mon/Wed/Fri starts Monday
+series_3	standup	c6from0817	plain	2026-08-24	and wraps into the next week
+series_count	bymonth	y2026	plain	2	the 15th of January and July
+series_0	bymonth	y2026	plain	2026-01-15	BYMONTH, January
+series_1	bymonth	y2026	plain	2026-07-15	BYMONTH, July
+series_2	bdays	c3from1223	xmas	2026-12-28	business-day steps skip the holiday
+add_bhours	2026-08-17 13:00:00	240	hours	2026-08-17 17:00:00	exhausting exactly at close lands AT close
+add_bhours	2026-08-17 15:00:00	240	hours	2026-08-18 11:00:00	and otherwise spans overnight
+add_bhours	2026-08-17 09:00:00	480	hours	2026-08-17 17:00:00	eight hours is one full day
+add_bhours	2026-08-17 06:00:00	60	hours	2026-08-17 10:00:00	a clock starting early starts at open
+add_bhours	2026-08-15 11:00:00	60	hours	2026-08-17 10:00:00	a weekend start waits for Monday
+add_bhours	2026-08-15 11:00:00	0	hours	2026-08-17 09:00:00	zero clamps to open
+add_bhours	2026-08-14 16:00:00	240	hours	2026-08-17 12:00:00	the weekend pauses the clock
+add_bhours	2026-12-24 15:00:00	240	xmashours	2026-12-28 11:00:00	a holiday and a weekend pause it together
+add_bhours	2026-08-17 10:00:00	-120	hours	2026-08-14 16:00:00	negative durations walk backward
+bhours_between	2026-08-17 15:00:00	2026-08-18 11:00:00	hours	240	elapsed working time across a night
+bhours_between	2026-08-14 15:00:00	2026-08-17 11:00:00	hours	240	and across a weekend
+bhours_between	2026-08-17 13:00:00	2026-08-17 13:00:00	hours	0	the same instant is zero
+bhours_between	2026-08-17 11:00:00	2026-08-14 15:00:00	hours	-240	signed when reversed
+bhours_between	2026-08-15 08:00:00	2026-08-17 13:00:00	hours	240	a weekend start contributes nothing
+is_business_time	2026-08-17 09:00:00	hours	-	true	the open instant counts
+is_business_time	2026-08-17 17:00:00	hours	-	false	the close instant does not
+is_business_time	2026-08-15 11:00:00	hours	-	false	nor does a Saturday
+between	2026-01-01	2026-02-01	weeks	!dates.between: unit must be days, months, or years	between refuses an unknown unit
+select	badroll	2026-10-15	plain	!dates: roll must be forward, backward, or modified	roll refuses an unknown convention
+select	badwithin	2026-08-17	plain	!dates: within must be week, month, quarter, or year	within refuses an unknown scope
+select	nthneg	2026-08-17	plain	!dates.select: nth must be positive when searching from an anchor	a backward nth from an anchor is meaningless
+select	nonth	2026-08-17	plain	!dates.select: nth is required with within (or use after/before)	within alone does not pick a day
+series_count	monthly	nobound	plain	!dates.series: bounds need through: or count:	an unbounded series is refused
+series_count	badwhen	c3from0101	plain	!dates.series: when: needs every: week, month, quarter, or year	when: needs a period unit
+series_count	noevery	c3from0101	plain	!dates.series: spec needs every: (or when: with every:)	a series spec needs a step
+series_count	badevery	c3from0101	plain	!dates.series: every must be a duration or one of day, week, month, quarter, year, business day	and the step must be one it knows
+next_business_day	2026-08-17	never	-	!dates: no business day within 10 years; is the calendar empty?	an empty calendar refuses rather than hangs
+is_business_day	2026-08-17	badobserve	-	!dates: observe must be nearest or forward	observe refuses an unknown rule
+add_bhours	2026-08-17 10:00:00	60	plain	!dates: business-hours arithmetic needs a calendar with hours: { open:, close: }	hours arithmetic needs hours
+#
+# The two upstream defects this port found. Both are the same shape: gBASIC's
+# dates.bas reads its records with has(), so a key it does not recognise is
+# silently ignored -- while eleven sibling stdlib libraries refuse unknown
+# options through _options(), naming the known set. Axiom 6 says never
+# silently guess, and a rule that quietly means something else is worse than
+# one that fails, because a schedule built on it looks fine.
+#
+# Python refuses; gBASIC answers. These pass here and are tolerated there.
+#
+select	badfield	2026-08-17	plain	!dates: unknown spec field 'weekdy' (known: after, at, before, day, every, except, kind, month, nth, on_or_after, on_or_before, roll, weekday, when, within)	gbasic-defect: a misspelled spec field silently changes the rule
+select	nthfirst	2026-08-17	plain	!dates: nth must be a number or "last" (got 'first')	gbasic-defect: nth accepts any string as last

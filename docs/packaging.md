@@ -273,6 +273,12 @@ import instead of one that gets corrected under load.
 3. **Does `dates` stay inside `etools`?** Business calendars have a wide
    audience and no dependency on anything here. A sixth distribution waiting to
    happen; leave it inside until it asks to leave.
+
+   **Built there 2026-09-24, and the option is kept open cheaply.**
+   `etools.dates` imports nothing from the rest of `etools`, and from the
+   kernel only `UNKNOWN` -- so extracting it later is a move, not a
+   disentangling. It has one optional dependency (workalendar, behind the
+   `calendars` extra) and no required one beyond `tervalue`.
 4. **When does `arispec` leave this repo?** §5 says its own repo from day one;
    the 0.0.1 reservation currently sits in `packages/arispec/` because a
    placeholder is not day one. Extract at Wave 1.

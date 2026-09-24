@@ -34,6 +34,54 @@ for series, day, old, new in report.revisions:
 Nothing in that snippet mentions lineage. It is recorded anyway, by the
 ambient run context, into `.etools/lineage.db`.
 
+## Business calendars and recurrence
+
+`etools.dates` is a port of gBASIC's `stdlib/dates.bas`, so learning one
+teaches the other: same function names, same argument order, same error text.
+
+```python
+from datetime import timedelta
+from etools.dates import calendar, select, series, add_business_hours
+
+cal = calendar(holidays=["2026-12-25"], hours={"open": "9:00", "close": "17:00"})
+
+select({"nth": 3, "weekday": "thursday", "within": "month"}, "2026-08-17")
+# date(2026, 8, 20)
+
+series({"every": "month", "when": {"nth": 3, "weekday": "thursday"}, "at": "14:00"},
+       {"from": "2026-01-01", "through": "2026-06-30"}, cal)
+# six board meetings, each stamped 14:00
+
+series({"every": timedelta(weeks=2), "roll": "backward"},
+       {"from": "2026-01-02", "count": 26}, cal)
+# a year of paydays, none of them on a holiday
+
+add_business_hours("2026-12-24 15:00", timedelta(hours=4), cal)
+# datetime(2026, 12, 28, 11, 0) -- the holiday and the weekend paused the clock
+```
+
+One vocabulary, three verbs: `matches` asks, `select` finds the one day (or
+`UNKNOWN`), `series` enumerates. A **spec is a dict** and stays one, because
+recurrence rules live in databases and config files, not in source.
+
+Three things are adopted rather than built. The datetime kind is stdlib
+`date`/`datetime`; exact durations are `timedelta`; and holiday **data** is
+workalendar, behind `pip install etools-etl[calendars]` and an explicit
+conversion:
+
+```python
+from workalendar.usa import UnitedStates
+from etools.dates import holidays
+
+cal = holidays.from_workalendar(UnitedStates, range(2026, 2029))
+```
+
+No holiday pack ships here by default, on purpose. Observed-versus-actual
+rules differ per employer inside one country; packs rot silently, and a
+holiday moved by decree becomes a wrong `is_business_day` with no error
+anywhere. A wrong holiday from your data is your data bug; a wrong holiday
+from a pack we shipped would be ours, forever.
+
 ## Two things worth knowing
 
 **No API key, and nothing to pay.** Treasury's yield-curve feed and FRED's

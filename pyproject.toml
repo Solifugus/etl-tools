@@ -20,7 +20,7 @@ classifiers = [
     "Topic :: Database",
     "Topic :: Office/Business :: Financial",
 ]
-dependencies = []
+dependencies = ["tervalue>=0.1"]
 
 [project.urls]
 Homepage = "https://github.com/Solifugus/etl-tools"
@@ -31,6 +31,7 @@ postgres = ["psycopg>=3.1"]
 odbc = ["pyodbc>=5"]
 xlsx = ["openpyxl>=3.1"]
 frames = ["polars>=1.0"]
+calendars = ["workalendar>=17"]
 
 [project.scripts]
 etools = "etools.cli.__main__:main"

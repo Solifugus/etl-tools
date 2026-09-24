@@ -109,6 +109,16 @@ harness, then `dates` over workalendar and `persist`.
 
 **Ends with:** the value layer every later wave returns.
 
+**Status 2026-09-24 — all but `persist` done.** `tervalue` holds the four
+kernel types with 33 tests; the parity harness runs in both trees; `dates` is
+ported into `etools.dates` with 72 tests and 95 parity cases, adopting stdlib
+`date`/`datetime`/`timedelta` for the value kinds and workalendar for holiday
+data behind the `calendars` extra.
+
+The harness has now found **three** upstream gBASIC defects — one in `money`,
+two in `dates` — which is the return on building it before the libraries it
+checks rather than after. See `parity/README.md`.
+
 ### Wave 1 — ARI *(the distinctive bet)*
 
 Promoted from "skip" to first substantive wave, because it is the item with the
@@ -194,10 +204,14 @@ are design work, not translation.
    which buys an audience and costs a release process.
 2. **Name for ARI on PyPI.** `ari` is short and probably taken; check
    `arispec`, `anchorspec`, `ari-extract` before Wave 1 writes an import.
-3. **Does `ari_discover` really ship in Python first?** §4 Wave 1 says yes.
+3. **Does `dates` leave `etools`?** Deferred in `packaging.md` §10 and still
+   deferred, but the shape is now visible: `etools.dates` imports nothing from
+   the rest of `etools` and only `UNKNOWN` from the kernel. It is a sixth
+   distribution the day somebody asks for it and not before.
+4. **Does `ari_discover` really ship in Python first?** §4 Wave 1 says yes.
    It is the first deliberate break from "gBASIC leads, Python follows", and
    worth confirming rather than drifting into.
-4. **`formulas` vs `pycel`** — evaluate in Wave 2 against a real workbook, not
+5. **`formulas` vs `pycel`** — evaluate in Wave 2 against a real workbook, not
    from documentation.
-5. **Does `insight`/`reasoning` belong in an ETL library at all?** Wave 5 is a
+6. **Does `insight`/`reasoning` belong in an ETL library at all?** Wave 5 is a
    placeholder. The idea is strong; the fit is unproven.
