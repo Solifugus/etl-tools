@@ -142,6 +142,29 @@ widest gap between its value and its Python competition.
 **Ends with:** a standalone library that turns legacy print reports into
 frames. Independently useful, independently publishable.
 
+**Status 2026-09-24 — the parser, the runtime and `trace` are built.**
+`packages/arispec/`, 0.1.0, **zero dependencies**. Verified against all three
+gBASIC fixtures and their golden files: `teller_totals.rpt` (irregularity),
+`teller_totals_generated.rpt` (form feeds, three money dialects in one file),
+`delinquency.rpt` (vertical locators, varying gaps, wrapped rows, refused
+ambiguous dates). Output is identical to gBASIC's, line for line, including
+line counts. 58 tests.
+
+Built: page furniture (form feeds and header patterns), the indented spec
+language, all eight locators with exact/range/open/flush distances, `as <type>`
+**delimiting**, custom types with ordered rules and `/re/repl/` transforms,
+`using` bindings with lexical scope and dialects, `repeats`/`starts`/`ends`,
+`rows:` with `continue(...)`, and `trace` with claims, unclaimed runs,
+coverage and collisions.
+
+One platform divergence, handled rather than inherited: a spec writes `$1`..`$9`
+group references in a `/re/repl/` transform, because that is gBASIC's
+`replace()` spelling and one spec file must read the same in both trees. Python's
+`re.sub` wants `\1`, and handed the spec's own spelling would silently emit the
+literal string `$3-$2-$1`. Translated inside the engine, not in the spec.
+
+Not yet built: `ari_discover`.
+
 ### Wave 2 — `arispec.grid`
 
 **openpyxl is adopted outright and never reimplemented** — it is already the

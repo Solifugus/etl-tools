@@ -1,0 +1,76 @@
+07/15/2026 15:36 AM                                                      Page 1
+
+Branch: 14
+===============================================================================
+Teller: Wendy Hermin         Teller #: 386                              Summary
+-------------------------------------------------------------------------------
+Beginning Cash                                                      $13,586.25
+Ending Cash                                                          $8,651.75-
+Total Transactions                                                  $56,870.50
+-------------------------------------------------------------------------------
+GL                          Tran #    Type                          Amount
+Cash Deposit             001000234    12                             $9,250.00
+Check Deposit CHK#4211   001002345    11                            $18,500.00
+ACH Transfer             001004326    13                             $6,000.25-
+
+Teller: Ryan Bellbowl        Teller #: 261                              Summary
+-------------------------------------------------------------------------------
+Beginning Cash                                                       $3,863.50
+Total Transactions                                                  $66,921.35
+Ending Cash                                                         $18,510.75
+-------------------------------------------------------------------------------
+GL                          Tran #    Type                             Amount
+Cash Deposit             001000234    12                            $12,250.00
+Check Deposit CHK#5621   001002345    11                            $28,300.00
+ACH Transfer             001004326    13                             $1,000.50-
+
+07/15/2026 15:36 AM                                                      Page 1
+
+Teller: Ryan Bellbowl        Teller #: 262                              Summary
+-------------------------------------------------------------------------------
+Beginning Cash                                                       $3,863.50
+Total Transactions                                                  $66,921.35
+Ending Cash                                                         $18,510.75
+-------------------------------------------------------------------------------
+GL                          Tran #    Type                             Amount
+Cash Deposit             001000234    12                            $12,250.00
+Check Deposit CHK#3467   001002345    11                            $28,300.00
+
+
+
+Closing Cash in Drawer     Teller#: 386
+-------------------------------------------------------------------------------
+Bills                     Coins
+
+Hundreds    13            Dollars       1
+Fifties      4            Half-Dollars  0
+Twenties    42            Quarters      6
+Tens         3            Dimes         5
+Fives        1            Nickles       2
+Ones        12            Pennies       8
+Bait Cash   $8,0000
+
+Closing Cash in Drawer     Teller#: 261
+-------------------------------------------------------------------------------
+Bills                     Coins
+
+Hundreds    13            Dollars       1
+Fifties      4            Half-Dollars  0
+Twenties    42            Quarters      6
+Tens         3            Dimes         5
+Fives        1            Nickles       2
+Ones        12            Pennies       8
+Bait Cash   $8,0000
+
+
+Closing Cash in Drawer     Teller#: 262
+-------------------------------------------------------------------------------
+Bills                     Coins
+
+Hundreds    13            Dollars       1
+Fifties      4            Half-Dollars  0
+Twenties    42            Quarters      6
+Tens         3            Dimes         5
+Fives        1            Nickles       2
+Ones        12            Pennies       8
+Bait Cash   $8,0000

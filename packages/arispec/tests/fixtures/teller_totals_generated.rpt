@@ -1,0 +1,230 @@
+07/15/2026 15:36 AM                                                      Page 1
+
+Branch: 14
+===============================================================================
+Teller: Wendy Hermin         Teller #: 261                              Summary
+-------------------------------------------------------------------------------
+Beginning Cash                                                        $5,755.75
+Ending Cash                                                         -$11,653.25
+Total Transactions                                                   $83,949.25
+-------------------------------------------------------------------------------
+GL                          Tran #    Type                    Amount
+Money Order MO#6024      001006101    11                             $10,478.79
+Check Deposit CHK#8101   001005274    12                             $16,578.78
+
+Teller: Ryan Bellbowl        Teller #: 274                              Summary
+-------------------------------------------------------------------------------
+Beginning Cash                                                        $5,850.00
+Total Transactions                                                   $85,298.00
+Ending Cash                                                          $11,802.75
+-------------------------------------------------------------------------------
+GL                          Tran #    Type                       Amount
+Cash Deposit             001003993    11                              $5,380.94
+Money Order MO#7643      001008958    13                             $13,921.72
+Money Order MO#6031      001007319    13                             -$3,997.47
+Withdrawal               001007431    12                              $8,314.32
+
+Teller: Ada Okonkwo          Teller #: 287                              Summary
+-------------------------------------------------------------------------------
+Total Transactions                                                   $86,646.75
+Beginning Cash                                                        $5,944.25
+Ending Cash                                                          $11,952.25
+-------------------------------------------------------------------------------
+GL                          Tran #    Type                    Amount
+ACH Transfer             001004989    11                             $27,154.13
+Cash Deposit             001008642    13                             $16,700.07
+Withdrawal               001002046    12                              $9,553.22
+Cash Deposit             001003187    14                             $23,470.41
+
+Closing Cash in Drawer     Teller#: 261
+-------------------------------------------------------------------------------
+Bills                     Coins
+
+Hundreds     0            Dollars        2
+Fifties     53            Half-Dollars   1
+Twenties    33            Quarters       9
+Tens        56            Dimes          1
+Fives       34            Nickles        4
+Ones        10            Pennies        0
+Bait Cash   $8,000.00
+
+Closing Cash in Drawer     Teller#: 274
+-------------------------------------------------------------------------------
+Bills                     Coins
+
+Hundreds    35            Dollars        8
+Fifties     52            Half-Dollars   2
+Twenties    46            Quarters       5
+Tens        20            Dimes          7
+Fives       48            Nickles        7
+Ones        36            Pennies        6
+Bait Cash   $8,000.00
+
+Closing Cash in Drawer     Teller#: 287
+-------------------------------------------------------------------------------
+Bills                     Coins
+
+07/15/2026 15:36 AM                                                      Page 2
+
+Hundreds    23            Dollars        9
+Fifties      9            Half-Dollars   2
+Twenties    50            Quarters       7
+Tens        38            Dimes          6
+Fives       32            Nickles        3
+Ones        47            Pennies        9
+Bait Cash   $8,000.00
+
+Branch 14 Total                                                     $255,894.00
+
+Branch: 21
+===============================================================================
+Teller: Tomas Ahmed          Teller #: 301                              Summary
+-------------------------------------------------------------------------------
+Beginning Cash                                              $          6,045.75
+Ending Cash                                                 $        -12,113.25
+Total Transactions                                          $         88,099.25
+-------------------------------------------------------------------------------
+GL                          Tran #    Type                    Amount
+Withdrawal               001001129    13    $                         28,366.22
+Money Order MO#3754      001008759    11    $                         27,120.82
+Check Deposit CHK#3563   001005452    11    $                         17,032.27
+
+Teller: Ines Hermin          Teller #: 314                              Summary
+-------------------------------------------------------------------------------
+Beginning Cash                                              $          6,140.00
+Total Transactions                                          $         89,448.00
+Ending Cash                                                 $         12,262.75
+-------------------------------------------------------------------------------
+GL                          Tran #    Type                       Amount
+Withdrawal               001007321    14    $                         28,463.26
+Money Order MO#8921      001009774    14    $                         13,696.05
+Check Deposit CHK#7734   001001086    13    $                          1,703.35
+Check Deposit CHK#8831   001009017    14    $                         11,320.42
+
+Teller: Cole Bellbowl        Teller #: 327                              Summary
+-------------------------------------------------------------------------------
+Total Transactions                                          $         90,796.75
+Beginning Cash                                              $          6,234.25
+Ending Cash                                                 $         12,412.25
+-------------------------------------------------------------------------------
+GL                          Tran #    Type                    Amount
+ACH Transfer             001009595    11    $                         -1,767.09
+Cash Deposit             001002895    12    $                        -27,716.99
+Withdrawal               001003059    11    $                         15,475.31
+
+Closing Cash in Drawer     Teller#: 301
+-------------------------------------------------------------------------------
+Bills                     Coins
+
+Hundreds    51            Dollars        0
+Fifties      7            Half-Dollars   3
+Twenties    25            Quarters       7
+Tens        27            Dimes          9
+Fives       24            Nickles        4
+Ones        42            Pennies        9
+Bait Cash   $8,000.00
+
+Closing Cash in Drawer     Teller#: 314
+-------------------------------------------------------------------------------
+Bills                     Coins
+
+Hundreds    28            Dollars        0
+Fifties      4            Half-Dollars   1
+07/15/2026 15:36 AM                                                      Page 3
+
+Twenties    47            Quarters       2
+Tens        33            Dimes          3
+Fives       27            Nickles        9
+Ones        18            Pennies        7
+Bait Cash   $8,000.00
+
+Closing Cash in Drawer     Teller#: 327
+-------------------------------------------------------------------------------
+Bills                     Coins
+
+Hundreds    17            Dollars        6
+Fifties     23            Half-Dollars   7
+Twenties    28            Quarters       2
+Tens        22            Dimes          8
+Fives        3            Nickles        4
+Ones        56            Pennies        2
+Bait Cash   $8,000.00
+
+Branch 21 Total                                             $        268,344.00
+
+Branch: 28
+===============================================================================
+Teller: Ada Lindqvist        Teller #: 341                              Summary
+-------------------------------------------------------------------------------
+Beginning Cash                                                         6,335.75
+Ending Cash                                                          12,573.25-
+Total Transactions                                                    92,249.25
+-------------------------------------------------------------------------------
+GL                          Tran #    Type                    Amount
+Money Order MO#7121      001001618    11                               7,817.10
+Cash Deposit             001003987    14                               3,783.90
+ACH Transfer             001009831    14                             29,653.41-
+Money Order MO#5202      001007635    12                             13,649.40-
+
+Teller: Marcus Ahmed         Teller #: 354                              Summary
+-------------------------------------------------------------------------------
+Beginning Cash                                                         6,430.00
+Total Transactions                                                    93,598.00
+Ending Cash                                                           12,722.75
+-------------------------------------------------------------------------------
+GL                          Tran #    Type                       Amount
+Check Deposit CHK#6664   001002584    12                              28,730.98
+Check Deposit CHK#4371   001002873    13                               4,983.76
+
+Teller: Priya Hermin         Teller #: 367                              Summary
+-------------------------------------------------------------------------------
+Total Transactions                                                    94,946.75
+Beginning Cash                                                         6,524.25
+Ending Cash                                                           12,872.25
+-------------------------------------------------------------------------------
+GL                          Tran #    Type                    Amount
+Check Deposit CHK#6230   001001183    12                              24,886.02
+Withdrawal               001009688    12                               2,501.57
+
+Closing Cash in Drawer     Teller#: 341
+-------------------------------------------------------------------------------
+Bills                     Coins
+
+Hundreds    25            Dollars        7
+Fifties      4            Half-Dollars   9
+Twenties    33            Quarters       5
+Tens        29            Dimes          7
+Fives       14            Nickles        8
+Ones         2            Pennies        8
+07/15/2026 15:36 AM                                                      Page 4
+
+Bait Cash   8,000.00
+
+Closing Cash in Drawer     Teller#: 354
+-------------------------------------------------------------------------------
+Bills                     Coins
+
+Hundreds     3            Dollars        6
+Fifties     59            Half-Dollars   9
+Twenties    25            Quarters       0
+Tens        40            Dimes          4
+Fives       20            Nickles        2
+Ones         9            Pennies        6
+Bait Cash   8,000.00
+
+Closing Cash in Drawer     Teller#: 367
+-------------------------------------------------------------------------------
+Bills                     Coins
+
+Hundreds    30            Dollars        1
+Fifties     35            Half-Dollars   3
+Twenties    29            Quarters       2
+Tens        10            Dimes          6
+Fives       17            Nickles        0
+Ones        55            Pennies        8
+Bait Cash   8,000.00
+
+Branch 28 Total                                                      280,794.00
+
+===============================================================================
+GRAND TOTAL - ALL BRANCHES                                          $805,032.00

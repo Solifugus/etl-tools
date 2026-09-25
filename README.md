@@ -151,10 +151,27 @@ non-zero and lands in the journal as one line. Note that an *empty* result is
 treated as a failure too: an empty upsert succeeds and reports zero rows, which
 is exactly what a silent breakage looks like when nobody is reading the output.
 
+## The rest of the family
+
+This repo is a monorepo. `packages/` holds the libraries that stand on their
+own:
+
+| package | what it is | depends on |
+|---|---|---|
+| [`arispec`](packages/arispec/) | Anchor-relative identification — declarative extraction from irregular print reports and grids | **nothing** |
+| [`tervalue`](packages/tervalue/) | The kernel: `UNKNOWN`, `Outcome`, `LossReport`, `Money` | nothing |
+| [`finio`](packages/finio/) | Payment and statement formats with provenance | the kernel *(name reserved)* |
+
+See [`docs/packaging.md`](docs/packaging.md) for why these are separate
+distributions rather than one.
+
 ## Tests
 
 ```bash
-python -m unittest discover -s tests
+python -m unittest discover -s tests                                    # etools
+(cd packages/tervalue && PYTHONPATH=. python -m unittest discover -s tests)
+(cd packages/arispec  && PYTHONPATH=. python -m unittest discover -s tests)
+python parity/run_parity.py                                             # vs gBASIC
 ```
 
 No test performs network access.
