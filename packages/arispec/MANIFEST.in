@@ -1,0 +1,5 @@
+# The suite is worth shipping in the sdist, and a suite without its fixtures
+# is worse than none: it fails on a clean download and looks like a broken
+# release. Without this, setuptools takes tests/*.py and leaves the .rpt
+# files behind.
+recursive-include tests *.py *.rpt *.md
