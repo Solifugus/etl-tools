@@ -31,6 +31,17 @@
 
 program main(args)
     load dates from "../../gbasic/stdlib/dates.bas"
+    load persist from "../../gbasic/stdlib/persist.bas"
+
+    ' Shared with run_parity.py on purpose: an identical scratch path makes
+    ' the path inside an error message comparable verbatim rather than through
+    ' a filter. absent.json is never written, by anyone.
+    persist.ensure_dir("/tmp/parity_persist")
+    persist.write_atomic("/tmp/parity_persist/good.json", { schema_version: 1, theme: "dark", recent: 10 })
+    bk{file} = "/tmp/parity_persist/broken.json"
+    write(bk, "{ this is not json ]")
+    ek{file} = "/tmp/parity_persist/empty.json"
+    write(ek, "")
 
     if len(args) < 1 then
         print "usage: gbasic run_parity.bas <cases.tsv> [...]"
@@ -96,7 +107,20 @@ function _run(expr, a, b, c)
     if _is_money(expr) then
         return _run_money(expr, a, b, c)
     end if
+    if _is_persist(expr) then
+        return _run_persist(expr, a, b, c)
+    end if
     return _run_dates(expr, a, b, c)
+end function
+
+function _is_persist(expr)
+    if expr = "status" or expr = "reports" or expr = "value" then
+        return true
+    end if
+    if expr = "text_roundtrip" or expr = "encode_refuses" then
+        return true
+    end if
+    return false
 end function
 
 function _is_money(expr)
@@ -542,4 +566,54 @@ function _named_weekday(d, name, direction)
     end if
     x {previous sunday}= d
     return x
+end function
+
+
+' ------------------------------------------------------------------
+' The persist half.
+'
+' read_status answers loaded/missing/corrupt here and an Outcome answering
+' ok/unknown/invalid in the Python tree -- a deliberate deviation documented
+' in etools/persist.py. The case file uses THESE words and the Python runner
+' maps into them, so what the cases compare is the classification: that the
+' same file lands in the same one of three buckets in both trees.
+
+function _run_persist(expr, a, b, c)
+    on error goto next
+    r = _persist(expr, a, b, c)
+    if error then
+        msg = error.message
+        error.clear()
+        return "!" + msg
+    end if
+    on error stop
+    return r
+end function
+
+function _persist(expr, a, b, c)
+    if expr = "status" then
+        st = persist.read_status("/tmp/parity_persist/" + a + ".json")
+        return st.status
+    end if
+    if expr = "reports" then
+        st = persist.read_status("/tmp/parity_persist/" + a + ".json")
+        return string(st.message != "")
+    end if
+    if expr = "value" then
+        st = persist.read_status("/tmp/parity_persist/" + a + ".json")
+        return string(st.value[b])
+    end if
+    if expr = "text_roundtrip" then
+        persist.write_text_atomic("/tmp/parity_persist/notes.txt", a)
+        nf{file} = "/tmp/parity_persist/notes.txt"
+        back = read(nf)
+        return back
+    end if
+    if expr = "encode_refuses" then
+        ' `unknown` is part of the dialect the decoder accepts and has no JSON
+        ' form at all, so it is the one value both trees must refuse to write.
+        persist.write_atomic("/tmp/parity_persist/bad.json", { x: unknown })
+        return "wrote it"
+    end if
+    return "?"
 end function

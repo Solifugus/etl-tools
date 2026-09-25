@@ -109,15 +109,21 @@ harness, then `dates` over workalendar and `persist`.
 
 **Ends with:** the value layer every later wave returns.
 
-**Status 2026-09-24 — all but `persist` done.** `tervalue` holds the four
-kernel types with 33 tests; the parity harness runs in both trees; `dates` is
-ported into `etools.dates` with 72 tests and 95 parity cases, adopting stdlib
-`date`/`datetime`/`timedelta` for the value kinds and workalendar for holiday
-data behind the `calendars` extra.
+**COMPLETE 2026-09-24.** `tervalue` holds the four kernel types with 33
+tests; the parity harness runs in both trees; `dates` is ported into
+`etools.dates`, adopting stdlib `date`/`datetime`/`timedelta` for the value
+kinds and workalendar for holiday data behind the `calendars` extra; and
+`etools.persist` gives atomic writes and a read that reports missing, corrupt
+or loaded as a value rather than raising.
 
-The harness has now found **three** upstream gBASIC defects — one in `money`,
-two in `dates` — which is the return on building it before the libraries it
-checks rather than after. See `parity/README.md`.
+92 unit tests and 128 parity cases; both trees green. `arispec` and `finio`
+are reserved on PyPI.
+
+The port found **four** upstream gBASIC defects — one in `money`, two in
+`dates`, one in `persist` — which is the return on building the harness
+before the libraries it checks rather than after. See `parity/README.md`.
+
+Wave 1 (ARI) is next.
 
 ### Wave 1 — ARI *(the distinctive bet)*
 

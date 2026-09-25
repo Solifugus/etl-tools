@@ -43,7 +43,7 @@ sys.path.insert(0, str(ROOT.parent))
 
 from tervalue import UNKNOWN, Money  # noqa: E402
 
-from etools import dates as D  # noqa: E402
+from etools import dates as D, persist  # noqa: E402
 
 
 def _num(text: str):
@@ -186,11 +186,57 @@ DATES = {
     "is_business_time":      lambda a, b, c: _show(D.is_business_time(a, _cal(b))),
 }
 
-EVALUATORS = {"money": MONEY, "dates": DATES}
+# -------------------------------------------------------------- persist
+
+#: Shared with run_parity.bas on purpose -- an identical path makes the path
+#: inside an error message comparable verbatim instead of through a filter.
+SCRATCH = "/tmp/parity_persist"
+
+#: gBASIC answers loaded/missing/corrupt; an Outcome answers ok/unknown/
+#: invalid. The case files use gBASIC's words and both runners map into them,
+#: so what the cases test is the classification. See cases/persist.tsv.
+_STATUS = {"ok": "loaded", "unknown": "missing", "invalid": "corrupt"}
+
+
+def _persist_setup():
+    persist.ensure_dir(SCRATCH)
+    persist.write_atomic(f"{SCRATCH}/good.json",
+                         {"schema_version": 1, "theme": "dark", "recent": 10})
+    Path(f"{SCRATCH}/broken.json").write_text("{ this is not json ]")
+    Path(f"{SCRATCH}/empty.json").write_text("")
+    # absent.json is never written, by anyone.
+
+
+def _read(fixture):
+    return persist.read_status(f"{SCRATCH}/{fixture}.json")
+
+
+def _encode_refuses(kind):
+    value = {"x": UNKNOWN} if kind == "unknown" else {"x": object()}
+    persist.write_atomic(f"{SCRATCH}/bad.json", value)
+    return "wrote it"                       # reached only if the refusal failed
+
+
+def _text_roundtrip(text):
+    persist.write_text_atomic(f"{SCRATCH}/notes.txt", text)
+    return Path(f"{SCRATCH}/notes.txt").read_text()
+
+
+PERSIST = {
+    "status":         lambda a, b, c: _STATUS[_read(a).status],
+    "reports":        lambda a, b, c: _show(bool(_read(a).reason)),
+    "value":          lambda a, b, c: _show(_read(a).value[b]),
+    "text_roundtrip": lambda a, b, c: _text_roundtrip(a),
+    "encode_refuses": lambda a, b, c: _encode_refuses(a),
+}
+
+EVALUATORS = {"money": MONEY, "dates": DATES, "persist": PERSIST}
 
 
 def run_file(path: Path) -> tuple[int, int, int]:
     table = EVALUATORS.get(path.stem)
+    if table is PERSIST:
+        _persist_setup()
     passed = failed = skipped = 0
     for raw in path.read_text().splitlines():
         if not raw.strip() or raw.startswith("#") or raw.startswith("expr\t"):

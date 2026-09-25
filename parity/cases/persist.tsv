@@ -1,0 +1,41 @@
+# Parity cases: persist. Same six tab-separated columns.
+#
+#   expr <TAB> a <TAB> b <TAB> c <TAB> expect <TAB> name
+#
+# Both runners build their fixtures in the SAME scratch directory,
+# /tmp/parity_persist, which is deliberate: it makes the path inside an error
+# message identical in both trees, so the message can be compared verbatim
+# rather than through a filter. Setup writes good.json, broken.json and
+# empty.json; absent.json is never written by anyone.
+#
+# THE STATUS WORDS ARE THE CASE FILE'S, NOT EITHER TREE'S. gBASIC's
+# read_status answers loaded/missing/corrupt; Python's returns a tervalue
+# Outcome and answers ok/unknown/invalid, which is a deliberate deviation
+# documented in etools/persist.py. Both runners map into the vocabulary below,
+# so what these cases test is the CLASSIFICATION -- that the same file lands
+# in the same one of three buckets in both trees. The naming difference is
+# covered by the unit tests and the module docstring, not here.
+#
+#   loaded   <-  status = "loaded"   |  Outcome.is_ok
+#   missing  <-  status = "missing"  |  Outcome.is_unknown
+#   corrupt  <-  status = "corrupt"  |  Outcome.is_invalid
+#
+# There is no `reports absent` case. gBASIC leaves message empty for a missing
+# file; Python fills reason with "no file at <path>", because collapsing
+# "not there" and "could not be read" into one unknown means the reason is the
+# only thing that tells them apart. An intentional divergence, not a defect,
+# so it is stated here rather than dressed up as a shared expectation.
+#
+expr	a	b	c	expect	name
+status	good	-	-	loaded	a well-formed store loads
+status	absent	-	-	missing	a file that is not there is a state, not an error
+status	broken	-	-	corrupt	and neither is one that cannot be parsed
+status	empty	-	-	corrupt	a zero-byte store is present and unparseable
+reports	broken	-	-	true	a corrupt store says why
+reports	good	-	-	false	a good one has nothing to report
+value	good	theme	-	dark	the decoded document comes back
+value	good	recent	-	10	numbers survive the round trip
+value	good	schema_version	-	1	and so does the version it was stamped with
+text_roundtrip	line one	-	-	line one	write_text_atomic does not encode
+text_roundtrip	{"not": "json"}	-	-	{"not": "json"}	nor does it care what the text looks like
+encode_refuses	unknown	-	-	!persist: value is not JSON-encodable for /tmp/parity_persist/bad.json	an unknown has no JSON form, in either tree

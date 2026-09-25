@@ -82,6 +82,36 @@ holiday moved by decree becomes a wrong `is_business_day` with no error
 anywhere. A wrong holiday from your data is your data bug; a wrong holiday
 from a pack we shipped would be ours, forever.
 
+## Remembering things across runs
+
+`etools.persist` is the state store: atomic writes, and a read that never
+raises.
+
+```python
+from etools import persist
+
+persist.ensure_dir(home)
+persist.write_atomic(home / "settings.json", {"schema_version": 1, "theme": "dark"})
+
+st = persist.read_status(home / "settings.json")
+if st.is_ok:
+    settings = st.value
+elif st.is_invalid:
+    print(f"settings unreadable: {st.reason}")   # and st.raw holds the text
+```
+
+The write goes to a temporary sibling and is swapped in with a single
+`rename(2)`, so a crash mid-write never leaves a truncated file — a reader
+sees the whole old file or the whole new one. The JSON is strict: `json.dumps`
+emits bare `NaN` and `Infinity` by default, which RFC 8259 has no literals
+for, and a store other tools may read must be real JSON.
+
+The read reports **three** states as a value, never an exception: `is_ok`,
+`is_unknown` (no file, or it could not be read), `is_invalid` (present and
+unparseable — `reason` carries the parser's complaint and position, `raw` the
+text that failed). Missing and corrupt are different answers and the caller
+owns the recovery policy; a store that is absent is not a store that is wrong.
+
 ## Two things worth knowing
 
 **No API key, and nothing to pay.** Treasury's yield-curve feed and FRED's

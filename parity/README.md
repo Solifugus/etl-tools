@@ -96,3 +96,36 @@ silently yields a calendar with no holidays, where keyword-only arguments
 refuse it by construction.
 
 All three fixes belong in `dates.bas`, upstream.
+
+### persist — one temp filename for every writer
+
+`write_atomic` and `write_text_atomic` write to a **fixed** `path + ".tmp"`
+and rename it into place. The rename is genuinely atomic; the temp name is
+the problem. Two processes writing one store open the same temp file, so the
+loser's rename publishes bytes the winner was halfway through writing — which
+is the exact failure the temp-then-rename dance exists to prevent. A crashed
+run also strands `settings.json.tmp` beside the store forever.
+
+Python writes to a unique sibling (`name.<pid>.<random>.tmp`) and unlinks it
+if anything fails, so each writer renames its own whole file. Not in the case
+file — a temp filename is not observable in a passing case — but covered by
+`test_concurrent_writers_never_interleave`, which runs two writers and a
+reader against one store and asserts the reader never sees a torn file.
+
+## Where the two trees deliberately differ
+
+Not every divergence is a defect. `cases/persist.tsv` compares the *three-way
+classification* of a store — loaded, missing, corrupt — rather than the words,
+because `read_status` returns gBASIC's `{status, value, message}` record there
+and a `tervalue.Outcome` here:
+
+| gBASIC | here | why |
+|---|---|---|
+| `"loaded"` | `is_ok` | |
+| `"missing"` | `is_unknown` | a store that is absent is not a store that is wrong — axiom 7 |
+| `"corrupt"` | `is_invalid` | and `Outcome` *enforces* that an invalid carries a reason |
+
+Both runners map into the case file's vocabulary, which is stated at the top
+of that file. The naming deviation itself is covered by the unit tests and
+`etools/persist.py`'s docstring — a case file is the wrong place to pin a
+decision, because it would read as an accident.
